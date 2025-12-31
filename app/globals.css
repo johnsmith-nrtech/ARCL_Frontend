@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+/* Allow avatar to overflow outside slick slide */
+.slick-list {
+  overflow: visible !important;
+}
+
+.slick-slide > div {
+  overflow: visible;
+}
