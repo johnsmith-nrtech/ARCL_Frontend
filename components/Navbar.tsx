@@ -22,7 +22,7 @@ const menuItems = [
       { title: "Therapies", href: "/therapies" },
     ],
   },
-  { title: "News&Updates", href: "/Activities" },
+  { title: "Updates", href: "/Activities" },
   { title: "Gallery", href: "/gallery" },
   { title: "Newsletter", href: "/newsletter" },
   { title: "Admissions", href: "/admissions" },
