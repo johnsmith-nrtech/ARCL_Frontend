@@ -107,39 +107,97 @@ export default function AdminSidebar() {
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-1 text-sm">
-          <NavItem href="/admin" icon={<LayoutDashboard size={18} />} active={pathname === "/admin"}>
+          <NavItem
+            href="/admin"
+            icon={<LayoutDashboard size={18} />}
+            active={pathname === "/admin"}
+          >
             Dashboard
           </NavItem>
 
-          <NavItem href="/admin/therapiesdetail" icon={<Brain size={18} />} active={pathname.startsWith("/admin/therapiesdetail")}>
+
+          <NavItem
+            href="/admin/testimonials"
+            icon={<User size={18} />}
+            active={
+              pathname.startsWith("/admin/testimonials") ||
+              pathname.startsWith("/admin/testimonials/add") ||
+              pathname.startsWith("/admin/testimonials/edit")
+            }
+          >
+            Testimonials
+          </NavItem>
+
+
+          <NavItem
+            href="/admin/therapiesdetail"
+            icon={<Brain size={18} />}
+            active={pathname.startsWith("/admin/therapiesdetail")}
+          >
             Therapy Details
           </NavItem>
 
-          <NavItem href="/admin/services" icon={<Settings size={18} />} active={pathname.startsWith("/admin/services")}>
+          <NavItem
+            href="/admin/services"
+            icon={<Settings size={18} />}
+            active={pathname.startsWith("/admin/services")}
+          >
             Services
           </NavItem>
 
-          <NavItem href="/admin/news" icon={<Megaphone size={18} />} active={pathname.startsWith("/admin/news")}>
+          <NavItem
+            href="/admin/news"
+            icon={<Megaphone size={18} />}
+            active={
+              pathname === "/admin/news" ||
+              pathname.startsWith("/admin/news/add") ||
+              pathname.startsWith("/admin/news/edit")
+            }
+          >
             News&Updates
           </NavItem>
 
-          <NavItem href="/admin/donations" icon={<HeartHandshake size={18} />} active={pathname.startsWith("/admin/donations")}>
+          <NavItem
+            href="/admin/donations"
+            icon={<HeartHandshake size={18} />}
+            active={pathname.startsWith("/admin/donations")}
+          >
             Donations
           </NavItem>
 
-          <NavItem href="/admin/about" icon={<Info size={18} />} active={pathname.startsWith("/admin/about")}>
+          <NavItem
+            href="/admin/about"
+            icon={<Info size={18} />}
+            active={pathname.startsWith("/admin/about")}
+          >
             About Us
           </NavItem>
 
-          <NavItem href="/admin/gallery" icon={<Camera size={18} />} active={pathname.startsWith("/admin/gallery")}>
+          <NavItem
+            href="/admin/gallery"
+            icon={<Camera size={18} />}
+            active={pathname.startsWith("/admin/gallery")}
+          >
             Gallery
           </NavItem>
 
-          <NavItem href="/admin/newsletters" icon={<Megaphone size={18} />} active={pathname.startsWith("/admin/newsletters")}>
+          <NavItem
+            href="/admin/newsletters"
+            icon={<Megaphone size={18} />}
+            active={
+              pathname === "/admin/newsletters" ||
+              pathname.startsWith("/admin/newsletters/add") ||
+              pathname.startsWith("/admin/newsletters/edit")
+            }
+          >
             Newsletters
           </NavItem>
 
-          <NavItem href="/admin/users" icon={<User size={18} />} active={pathname.startsWith("/admin/users")}>
+          <NavItem
+            href="/admin/users"
+            icon={<User size={18} />}
+            active={pathname.startsWith("/admin/users")}
+          >
             Users
           </NavItem>
         </nav>
