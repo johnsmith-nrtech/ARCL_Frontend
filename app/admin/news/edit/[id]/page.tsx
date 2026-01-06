@@ -9,7 +9,7 @@ interface FormState {
   title: string;
   description: string;
   date: string;
-  type: "Event" | "Workshop";
+  type: "Event" | "Workshop" | "Internship"; // <-- Added Internship
   image: File | null;
   existingImage?: string; // for showing the current image
 }
@@ -32,7 +32,6 @@ export default function EditNewsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const API_URL = process.env.NEXT_PUBLIC_API_URL!;
-
 
   // Fetch existing newsupdate data
   useEffect(() => {
@@ -130,7 +129,7 @@ export default function EditNewsPage() {
   return (
     <div className="max-w-4xl mx-auto p-8">
       <h1 className="text-3xl font-bold text-[#3f1a7b] mb-8">
-        Edit Event / Workshop
+        Edit Event / Workshop / Internship
       </h1>
 
       <form
@@ -181,12 +180,13 @@ export default function EditNewsPage() {
           <select
             value={form.type}
             onChange={(e) =>
-              setForm({ ...form, type: e.target.value as "Event" | "Workshop" })
+              setForm({ ...form, type: e.target.value as "Event" | "Workshop" | "Internship" })
             }
             className="w-full mt-2 p-3 border rounded-lg"
           >
             <option value="Event">Event</option>
             <option value="Workshop">Workshop</option>
+            <option value="Internship">Internship</option> {/* <-- Added */}
           </select>
         </div>
 
@@ -209,12 +209,13 @@ export default function EditNewsPage() {
                     preview
                       ? preview
                       : form.existingImage
-                      ? `${API_URL}${form.existingImage}`
-                      : "/images/book.png"
+                      ? `${API_URL}${form.existingImage}` // <-- same as Admin page
+                      : "/newsletter-placeholder.jpg"
                   }
                   alt={form.title}
                   fill
                   className="object-cover"
+                  unoptimized // <-- add this to allow remote URLs
                 />
               </div>
 
@@ -227,6 +228,7 @@ export default function EditNewsPage() {
               </button>
             </div>
           )}
+
         </div>
 
         {/* Buttons */}

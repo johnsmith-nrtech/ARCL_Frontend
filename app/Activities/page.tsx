@@ -13,7 +13,7 @@ interface NewsItem {
   _id: string;
   title: string;
   description: string;
-  type: "Event" | "Workshop";
+  type: "Event" | "Workshop" | "Internship"; // <-- Added Internship
   date: string;
   image?: string;
 }
@@ -46,6 +46,7 @@ export default function HomePage() {
 
   const events = items.filter((i) => i.type === "Event");
   const workshops = items.filter((i) => i.type === "Workshop");
+  const internships = items.filter((i) => i.type === "Internship"); // <-- NEW
 
   const Card = ({ item }: { item: NewsItem }) => (
     <div className="bg-white rounded-xl shadow hover:shadow-xl transition">
@@ -139,6 +140,23 @@ export default function HomePage() {
             <Card key={item._id} item={item} />
           ))}
         </div>
+      </section>
+
+      {/* Internships */}
+      <section className="max-w-7xl mx-auto mt-24 px-4 mb-20">
+        <h2 className="text-3xl font-bold text-[#3f1a7b] mb-10 text-center">
+          Internships
+        </h2>
+
+        {loading ? (
+          <p className="text-center">Loading...</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {internships.map((item) => (
+              <Card key={item._id} item={item} />
+            ))}
+          </div>
+        )}
       </section>
 
       <GetInTouch />

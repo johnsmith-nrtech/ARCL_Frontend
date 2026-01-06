@@ -8,7 +8,7 @@ interface FormState {
   title: string;
   description: string;
   date: string; // replaced author with date
-  type: "Event" | "Workshop";
+  type: "Event" | "Workshop" | "Internship"; // <-- Added Internship
   image: File | null;
 }
 
@@ -26,6 +26,7 @@ export default function AddNewsPage() {
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const API_URL = process.env.NEXT_PUBLIC_API_URL!;
+
   // Cleanup preview URL when component unmounts or image changes
   useEffect(() => {
     return () => {
@@ -47,49 +48,49 @@ export default function AddNewsPage() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setLoading(true);
+    e.preventDefault();
+    setLoading(true);
 
-  try {
-    const formData = new FormData();
-    formData.append("title", form.title);
-    formData.append("description", form.description);
-    formData.append("type", form.type);
-    formData.append("date", form.date?.toString() || "");
-    if (form.image) formData.append("image", form.image);
-
-    const res = await fetch(`${API_URL}/api/newsupdate`, {
-      method: "POST",
-      body: formData,
-    });
-
-    // Read response as text first
-    const text = await res.text();
-
-    // Try parsing JSON safely
-    let data;
     try {
-      data = JSON.parse(text);
-    } catch {
-      console.error("Non-JSON response:", text);
-      throw new Error("Server returned invalid JSON");
+      const formData = new FormData();
+      formData.append("title", form.title);
+      formData.append("description", form.description);
+      formData.append("type", form.type);
+      formData.append("date", form.date?.toString() || "");
+      if (form.image) formData.append("image", form.image);
+
+      const res = await fetch(`${API_URL}/api/newsupdate`, {
+        method: "POST",
+        body: formData,
+      });
+
+      // Read response as text first
+      const text = await res.text();
+
+      // Try parsing JSON safely
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        console.error("Non-JSON response:", text);
+        throw new Error("Server returned invalid JSON");
+      }
+
+      if (!data.success) throw new Error(data.message || "Something went wrong");
+
+      alert("News added successfully!");
+      router.push("/admin/news");
+    } catch (err: any) {
+      alert(`Error: ${err.message}`);
+    } finally {
+      setLoading(false);
     }
-
-    if (!data.success) throw new Error(data.message || "Something went wrong");
-
-    alert("News added successfully!");
-    router.push("/admin/news");
-  } catch (err: any) {
-    alert(`Error: ${err.message}`);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-8">
       <h1 className="text-3xl font-bold text-[#3f1a7b] mb-8">
-        Add Event / Workshop
+        Add Event / Workshop / Internship
       </h1>
 
       <form
@@ -140,12 +141,16 @@ export default function AddNewsPage() {
           <select
             value={form.type}
             onChange={(e) =>
-              setForm({ ...form, type: e.target.value as "Event" | "Workshop" })
+              setForm({
+                ...form,
+                type: e.target.value as "Event" | "Workshop" | "Internship",
+              })
             }
             className="w-full mt-2 p-3 border rounded-lg"
           >
             <option value="Event">Event</option>
             <option value="Workshop">Workshop</option>
+            <option value="Internship">Internship</option> {/* <-- Added */}
           </select>
         </div>
 

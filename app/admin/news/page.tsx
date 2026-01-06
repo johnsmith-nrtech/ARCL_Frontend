@@ -7,12 +7,11 @@ import { useRouter } from "next/navigation";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL!;
 
-
 interface NewsUpdateItem {
   _id: string;
   title: string;
   description: string;
-  type: "Event" | "Workshop";
+  type: "Event" | "Workshop" | "Internship"; // <-- Added Internship
   date: string;
   image?: string;
 }
@@ -20,7 +19,7 @@ interface NewsUpdateItem {
 export default function AdminNewsUpdatePage() {
   const router = useRouter();
   const [items, setItems] = useState<NewsUpdateItem[]>([]);
-  const [filter, setFilter] = useState<"All" | "Event" | "Workshop">("All");
+  const [filter, setFilter] = useState<"All" | "Event" | "Workshop" | "Internship">("All"); // <-- Added Internship
   const [loading, setLoading] = useState(true);
 
   // Fetch updates
@@ -64,13 +63,13 @@ export default function AdminNewsUpdatePage() {
   return (
     <div className="p-8 max-w-7xl mx-auto">
       <h1 className="text-3xl font-bold text-[#3f1a7b] mb-6">
-        Manage Events & Workshops
+        Manage Events, Workshops & Internships
       </h1>
 
       {/* Controls */}
       <div className="flex flex-wrap gap-4 justify-between items-center mb-6">
         <div className="flex gap-3">
-          {["All", "Event", "Workshop"].map((t) => (
+          {["All", "Event", "Workshop", "Internship"].map((t) => (
             <button
               key={t}
               onClick={() => setFilter(t as any)}
@@ -140,7 +139,9 @@ export default function AdminNewsUpdatePage() {
                         ${
                           item.type === "Event"
                             ? "bg-green-100 text-green-700"
-                            : "bg-blue-100 text-blue-700"
+                            : item.type === "Workshop"
+                            ? "bg-blue-100 text-blue-700"
+                            : "bg-purple-100 text-purple-700" // <-- Internship color
                         }`}
                     >
                       {item.type}
