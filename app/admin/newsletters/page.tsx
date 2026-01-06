@@ -14,8 +14,6 @@ interface Newsletter {
 }
 const API_URL = process.env.NEXT_PUBLIC_API_URL!;
 
-
-
 export default function NewsletterListPage() {
   const [newsletters, setNewsletters] = useState<Newsletter[]>([]);
   const [loading, setLoading] = useState(true);
@@ -58,8 +56,8 @@ export default function NewsletterListPage() {
     return <div className="text-center py-20 text-red-600">{error}</div>;
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12">
-      <div className="flex justify-between items-center mb-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3">
         <h1 className="text-3xl font-bold text-[#3f1a7b]">Newsletters</h1>
 
         <Link
@@ -75,27 +73,23 @@ export default function NewsletterListPage() {
         <p className="text-gray-500">No newsletters found.</p>
       ) : (
         <div className="overflow-x-auto bg-white shadow rounded-lg">
-          <table className="w-full border-collapse">
-            <thead className="bg-gray-100 text-left">
+          <table className="w-full border-collapse min-w-[600px] sm:min-w-full">
+            <thead className="bg-[#260e58] text-white text-left">
               <tr>
-                <th className="p-4">Image</th>
-                <th className="p-4">Title</th>
-                <th className="p-4">Date</th>
-                <th className="p-4">PDF</th>
-                <th className="p-4 text-center">Actions</th>
+                <th className="p-2 sm:p-4">Image</th>
+                <th className="p-2 sm:p-4">Title</th>
+                <th className="p-2 sm:p-4">Date</th>
+                <th className="p-2 sm:p-4">PDF</th>
+                <th className="p-2 sm:p-4 text-center">Actions</th>
               </tr>
             </thead>
 
             <tbody>
               {newsletters.map((item) => (
                 <tr key={item._id} className="border-t hover:bg-gray-50">
-                  <td className="p-4">
+                  <td className="p-2 sm:p-4">
                     <Image
-                      src={
-                        item.imageUrl
-                          ? `${API_URL}${item.imageUrl}`
-                          : "/newsletter-placeholder.jpg"
-                      }
+                      src={item.imageUrl ? `${API_URL}${item.imageUrl}` : "/newsletter-placeholder.jpg"}
                       alt={item.title}
                       width={80}
                       height={60}
@@ -104,15 +98,13 @@ export default function NewsletterListPage() {
                     />
                   </td>
 
-                  <td className="p-4 font-medium text-[#3f1a7b]">
+                  <td className="p-2 sm:p-4 font-medium text-[#3f1a7b]">
                     {item.title}
                   </td>
 
-                  <td className="p-4 text-sm text-gray-600">
-                    {item.date}
-                  </td>
+                  <td className="p-2 sm:p-4 text-sm text-gray-600">{item.date}</td>
 
-                  <td className="p-4">
+                  <td className="p-2 sm:p-4">
                     <a
                       href={`${API_URL}${item.pdfUrl}`}
                       target="_blank"
@@ -122,18 +114,18 @@ export default function NewsletterListPage() {
                     </a>
                   </td>
 
-                  <td className="p-4">
-                    <div className="flex justify-center gap-2">
+                  <td className="p-2 sm:p-4">
+                    <div className="flex flex-col sm:flex-row justify-center sm:gap-2 gap-1">
                       <Link
                         href={`/admin/newsletters/edit/${item._id}`}
-                        className="flex items-center gap-1 text-sm px-3 py-1 border rounded"
+                        className="flex items-center gap-1 text-sm px-2 sm:px-3 py-1 border rounded"
                       >
                         <Pencil size={14} /> Edit
                       </Link>
 
                       <button
                         onClick={() => handleDelete(item._id)}
-                        className="flex items-center gap-1 text-sm px-3 py-1
+                        className="flex items-center gap-1 text-sm px-2 sm:px-3 py-1
                                    border border-red-400 text-red-600 rounded"
                       >
                         <Trash2 size={14} /> Delete

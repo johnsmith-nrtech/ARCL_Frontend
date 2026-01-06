@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const [email, setEmail] = useState("Loading..."); // fallback until fetch completes
+  const [email, setEmail] = useState("Loading...");
 
   useEffect(() => {
     const token = localStorage.getItem("adminToken");
@@ -18,6 +18,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       router.replace("/login");
       return;
     }
+
     const API_URL = process.env.NEXT_PUBLIC_API_URL!;
 
     const fetchUser = async () => {
@@ -26,9 +27,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch user");
-        }
+        if (!res.ok) throw new Error("Failed to fetch user");
 
         const userData = await res.json();
         setEmail(userData.email || "admin@arcl.org");
@@ -39,10 +38,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       }
     };
 
-    // Optional: check token expiration before fetching
     try {
       const payloadBase64 = token.split(".")[1];
       const decoded = JSON.parse(atob(payloadBase64));
+
       if (decoded.exp && decoded.exp * 1000 < Date.now()) {
         localStorage.removeItem("adminToken");
         router.replace("/login");
@@ -63,11 +62,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <AdminSidebar />
 
       {/* Main Area */}
-      <div className="ml-64 flex flex-col flex-1 h-screen overflow-hidden">
+      <div className="flex flex-col flex-1 h-screen overflow-hidden md:ml-64">
 
         {/* Top Bar */}
-        <header className="h-16 bg-white border-b shadow-sm flex items-center justify-between px-8 shrink-0">
-          <h2 className="text-lg font-semibold">Admin Panel</h2>
+        <header className="h-16 bg-white border-b shadow-sm flex items-center justify-between px-4 sm:px-8 shrink-0">
+          <h2 className="text-lg ml-12 md:ml-0 font-semibold">Admin Panel</h2>
 
           <div className="flex items-center gap-3">
             <span className="text-sm text-gray-500 hidden sm:block">{email}</span>
@@ -78,7 +77,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto p-6 lg:p-10">{children}</main>
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-10">
+          {children}
+        </main>
       </div>
     </div>
   );

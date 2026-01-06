@@ -30,7 +30,6 @@ export default function AdminGalleryPage() {
   const [search, setSearch] = useState("");
   const API_URL = process.env.NEXT_PUBLIC_API_URL!;
 
-
   const [form, setForm] = useState<{
     files: File[];
     previews: string[];
@@ -118,20 +117,20 @@ export default function AdminGalleryPage() {
   });
 
   return (
-    <main className="px-6 py-12">
-      <h1 className="text-4xl font-bold text-[#2a1d7a] mb-6">
+    <main className="px-4 sm:px-6 py-8 sm:py-12">
+      <h1 className="text-3xl sm:text-4xl font-bold text-[#2a1d7a] mb-6">
         Gallery Management
       </h1>
 
       {/* ================= UPLOAD ================= */}
-       <div className="bg-white p-8 rounded-2xl shadow-xl mb-16 max-w-6xl">
-        <h2 className="text-2xl font-bold text-[#2a1d7a] mb-6 flex items-center gap-2">
+      <div className="bg-white p-4 sm:p-8 rounded-2xl shadow-xl mb-12 max-w-full sm:max-w-6xl">
+        <h2 className="text-2xl sm:text-3xl font-bold text-[#2a1d7a] mb-6 flex items-center gap-2">
           <Plus /> Add Gallery Images
         </h2>
 
-        <div className="grid lg:grid-cols-3 gap-8 items-stretch">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 items-stretch">
           {/* IMAGE UPLOAD CARD */}
-          <div className="bg-gray-50 border border-dashed border-gray-300 rounded-2xl p-8 hover:border-[#3f1a7b] transition flex flex-col justify-center min-h-[260px]">
+          <div className="bg-gray-50 border border-dashed border-gray-300 rounded-2xl p-6 sm:p-8 hover:border-[#3f1a7b] transition flex flex-col justify-center min-h-[260px]">
             <label className="flex flex-col items-center justify-center cursor-pointer text-center h-full">
               <div className="w-16 h-16 flex items-center justify-center rounded-full bg-[#3f1a7b]/10 mb-4">
                 <Upload className="text-[#3f1a7b]" size={28} />
@@ -155,13 +154,13 @@ export default function AdminGalleryPage() {
           </div>
 
           {/* THERAPY SELECT CARD */}
-          <div className="bg-white border rounded-2xl p-6 shadow-sm flex flex-col justify-between min-h-[260px]">
-            <div className="space-y-4">
-              <label className="block text-sm font-semibold text-gray-700">
+          <div className="bg-white border rounded-2xl p-4 sm:p-6 shadow-sm flex flex-col justify-between min-h-[260px]">
+            <div className="space-y-3 sm:space-y-4">
+              <label className="block text-sm sm:text-base font-semibold text-gray-700">
                 Assign to Therapy
               </label>
 
-              <p className="text-xs text-gray-500">
+              <p className="text-xs sm:text-sm text-gray-500">
                 Only active therapies are shown
               </p>
 
@@ -170,7 +169,7 @@ export default function AdminGalleryPage() {
                 onChange={(e) =>
                   setForm({ ...form, therapyId: e.target.value })
                 }
-                className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 focus:border-[#3f1a7b] focus:ring-2 focus:ring-[#3f1a7b]/30 outline-none transition"
+                className="w-full rounded-xl border border-gray-300 bg-gray-50 px-3 sm:px-4 py-2 sm:py-3 focus:border-[#3f1a7b] focus:ring-2 focus:ring-[#3f1a7b]/30 outline-none transition"
               >
                 <option value="">-- Select Therapy --</option>
                 {therapies.map((t) => (
@@ -181,14 +180,10 @@ export default function AdminGalleryPage() {
               </select>
 
               {form.therapyId && (
-                <p className="text-sm text-gray-700">
+                <p className="text-sm sm:text-base text-gray-700">
                   Selected:{" "}
                   <span className="font-semibold">
-                    {
-                      therapies.find(
-                        (t) => t._id === form.therapyId
-                      )?.mainTitle
-                    }
+                    {therapies.find((t) => t._id === form.therapyId)?.mainTitle}
                   </span>
                 </p>
               )}
@@ -196,12 +191,12 @@ export default function AdminGalleryPage() {
           </div>
 
           {/* ACTION CARD */}
-          <div className="bg-white border rounded-2xl p-6 shadow-sm flex flex-col justify-between min-h-[260px]">
+          <div className="bg-white border rounded-2xl p-4 sm:p-6 shadow-sm flex flex-col justify-between min-h-[260px]">
             <div>
               <h4 className="font-semibold text-gray-800 mb-2">
                 Save Gallery
               </h4>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm sm:text-base text-gray-500">
                 Upload all selected images at once
               </p>
             </div>
@@ -209,7 +204,7 @@ export default function AdminGalleryPage() {
             <button
               onClick={handleSave}
               disabled={loading}
-              className="w-full bg-[#3f1a7b] text-white font-semibold rounded-xl py-3 hover:bg-[#2a1d7a] transition disabled:opacity-60"
+              className="w-full bg-[#3f1a7b] text-white font-semibold rounded-xl py-2 sm:py-3 mt-4 sm:mt-0 hover:bg-[#2a1d7a] transition disabled:opacity-60"
             >
               {loading ? "Uploading..." : "Save Images"}
             </button>
@@ -218,7 +213,7 @@ export default function AdminGalleryPage() {
 
         {/* ================= PREVIEWS ================= */}
         {form.previews.length > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-6 sm:mt-8">
             {form.previews.map((src, i) => (
               <Image
                 key={i}
@@ -233,14 +228,15 @@ export default function AdminGalleryPage() {
           </div>
         )}
       </div>
+
       {/* ================= FILTER ================= */}
-      <div className="bg-white p-6 rounded-xl shadow mb-6 flex flex-col md:flex-row gap-4">
-        <div className="flex items-center gap-2">
+      <div className="bg-white p-4 sm:p-6 rounded-xl shadow mb-6 flex flex-col sm:flex-row gap-3 sm:gap-4 items-start sm:items-center">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           <Filter size={18} />
           <select
             value={filterTherapy}
             onChange={(e) => setFilterTherapy(e.target.value)}
-            className="border rounded-lg px-3 py-2"
+            className="border rounded-lg px-3 py-2 w-full sm:w-auto"
           >
             <option value="">All Therapies</option>
             {therapies.map((t) => (
@@ -256,28 +252,25 @@ export default function AdminGalleryPage() {
           placeholder="Search therapy..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="border rounded-lg px-4 py-2 flex-1"
+          className="border rounded-lg px-3 py-2 flex-1 w-full sm:w-auto"
         />
       </div>
 
       {/* ================= TABLE ================= */}
       <div className="overflow-x-auto bg-white rounded-xl shadow">
-        <table className="w-full text-left">
+        <table className="w-full text-left min-w-[400px] sm:min-w-full">
           <thead className="bg-gray-100">
             <tr>
-              <th className="p-4">Image</th>
-              <th className="p-4">Therapy</th>
-              <th className="p-4 text-right">Action</th>
+              <th className="p-3 sm:p-4">Image</th>
+              <th className="p-3 sm:p-4">Therapy</th>
+              <th className="p-3 sm:p-4 text-right">Action</th>
             </tr>
           </thead>
 
           <tbody>
             {filteredGallery.map((g) => (
-              <tr
-                key={g._id}
-                className="border-t hover:bg-gray-50"
-              >
-                <td className="p-4">
+              <tr key={g._id} className="border-t hover:bg-gray-50">
+                <td className="p-3 sm:p-4">
                   <Image
                     src={`${API_URL}${g.imageUrl}`}
                     alt=""
@@ -287,15 +280,11 @@ export default function AdminGalleryPage() {
                     className="rounded-lg object-cover"
                   />
                 </td>
-                <td className="p-4 font-medium">
-                  {g.therapyTitle}
-                </td>
-                <td className="p-4 text-right">
+                <td className="p-3 sm:p-4 font-medium">{g.therapyTitle}</td>
+                <td className="p-3 sm:p-4 text-right">
                   <button
                     onClick={() => handleDelete(g._id)}
-                    className="flex items-center gap-1 text-sm px-3 py-1
-                        border border-red-400 text-red-600 rounded-md
-                        hover:bg-red-50 hover:border-red-500 transition"
+                    className="flex items-center gap-1 text-sm px-2 sm:px-3 py-1 sm:py-1.5 border border-red-400 text-red-600 rounded-md hover:bg-red-50 hover:border-red-500 transition"
                   >
                     <Trash2 size={14} /> Delete
                   </button>
@@ -305,10 +294,7 @@ export default function AdminGalleryPage() {
 
             {filteredGallery.length === 0 && (
               <tr>
-                <td
-                  colSpan={3}
-                  className="p-6 text-center text-gray-500"
-                >
+                <td colSpan={3} className="p-4 text-center text-gray-500">
                   No images found
                 </td>
               </tr>
