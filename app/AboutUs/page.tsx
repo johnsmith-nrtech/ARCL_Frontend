@@ -145,18 +145,20 @@ export default function AboutUsPage() {
             Our Certifications
           </h2>
 
-          <div className="flex overflow-hidden">
+          {/* Grid Layout */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {certifications.map((cert) => (
               <a
                 key={cert._id}
                 href={`${API_URL}${cert.pdf}`}
                 target="_blank"
-                className="w-1/3 px-4"
+                rel="noopener noreferrer"
+                className="block"
               >
                 <img
                   src={`${API_URL}${cert.image}`}
                   alt={cert.title}
-                  className="h-72 w-full object-cover rounded-xl shadow-lg"
+                  className="h-72 w-full object-cover rounded-xl shadow-lg hover:scale-105 transition-transform duration-300"
                 />
                 <h3 className="text-center mt-3 font-semibold text-blue-950">
                   {cert.title}

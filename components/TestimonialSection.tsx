@@ -42,21 +42,29 @@ export default function TestimonialSection() {
     const fetchTestimonials = async () => {
       try {
         const res = await fetch(`${API_URL}/api/testimonials`, { cache: "no-store" });
-
-        // If server returns HTML instead of JSON
         const contentType = res.headers.get("content-type");
+
         if (!contentType || !contentType.includes("application/json")) {
           setTestimonials([]);
           return;
         }
 
         const data = await res.json();
-
         if (!res.ok) throw new Error(data?.message || "Failed to fetch testimonials");
 
-        setTestimonials(Array.isArray(data) ? data : []);
+        // ✅ Ensure image URLs are absolute
+        const formattedData = data.map((t: Testimonial) => ({
+          ...t,
+          image: t.image?.startsWith("http")
+            ? t.image
+            : t.image
+            ? `${API_URL}${t.image}`
+            : null,
+        }));
+
+        setTestimonials(formattedData);
       } catch (err) {
-        setTestimonials([]); // show empty if error
+        setTestimonials([]);
       } finally {
         setLoading(false);
       }
@@ -103,7 +111,7 @@ export default function TestimonialSection() {
                 <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full bg-white border-4 border-white shadow-xl overflow-hidden">
                   {t.image ? (
                     <Image
-                      src={`${API_URL}${t.image}`}
+                      src={t.image}
                       alt={t.name}
                       fill
                       className="object-cover"
@@ -135,7 +143,7 @@ export default function TestimonialSection() {
             <div className="w-20 h-20 mx-auto -mt-12 rounded-full bg-white border-4 border-white shadow-xl overflow-hidden relative">
               {t.image ? (
                 <Image
-                  src={`${API_URL}${t.image}`}
+                  src={t.image}
                   alt={t.name}
                   fill
                   className="object-cover"

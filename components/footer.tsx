@@ -90,8 +90,8 @@ export default function Footer() {
 
               <div>
                 <p className="font-medium text-gray-200 mb-1">Email:</p>
-                <a href="mailto:info@arcl.com" className="text-white hover:text-orange-300 transition">
-                  info@arcl.com
+                <a href="mailto:info@arcl.org.pk" className="text-white hover:text-orange-300 transition">
+                  info@arcl.org.pk
                 </a>
               </div>
 
