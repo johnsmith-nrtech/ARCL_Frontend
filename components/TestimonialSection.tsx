@@ -37,19 +37,26 @@ const Arrow = ({ onClick, direction }: any) => (
 export default function TestimonialSection() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
         const res = await fetch(`${API_URL}/api/testimonials`, { cache: "no-store" });
+
+        // If server returns HTML instead of JSON
+        const contentType = res.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          setTestimonials([]);
+          return;
+        }
+
         const data = await res.json();
 
-        if (!res.ok) throw new Error(data.message || "Failed to fetch testimonials");
+        if (!res.ok) throw new Error(data?.message || "Failed to fetch testimonials");
 
-        setTestimonials(data);
-      } catch (err: any) {
-        setError(err.message || "Failed to load testimonials");
+        setTestimonials(Array.isArray(data) ? data : []);
+      } catch (err) {
+        setTestimonials([]); // show empty if error
       } finally {
         setLoading(false);
       }
@@ -76,8 +83,11 @@ export default function TestimonialSection() {
     ],
   };
 
-  if (loading) return <p className="text-center py-12 text-gray-500">Loading testimonials...</p>;
-  if (error) return <p className="text-center py-12 text-red-600">{error}</p>;
+  if (loading)
+    return <p className="text-center py-12 text-gray-500">Loading testimonials...</p>;
+
+  if (testimonials.length === 0)
+    return <p className="text-center py-12 text-gray-500">No testimonials found.</p>;
 
   return (
     <section className="py-16 bg-[#f4f1ff] text-center overflow-hidden">

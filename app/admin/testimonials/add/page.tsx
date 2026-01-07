@@ -1,24 +1,24 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import Image from "next/image";
 
 export default function AddTestimonialPage() {
   const router = useRouter();
+  const API_URL = process.env.NEXT_PUBLIC_API_URL!;
+
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
     name: "",
-    role: "Parent",
+    role: "",
     message: "",
-    img: null as File | null,
   });
 
-  const [preview, setPreview] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const [newImage, setNewImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("/user.png");
 
   // ================= HANDLERS =================
   const handleChange = (
@@ -31,27 +31,33 @@ export default function AddTestimonialPage() {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setFormData({ ...formData, img: file });
-    setPreview(URL.createObjectURL(file));
+
+    setNewImage(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
+  const removeImage = () => {
+    setNewImage(null);
+    setImagePreview("/user.png");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
 
     if (!formData.name || !formData.message) {
-      alert("Name and message are required.");
+      setError("Name and message are required.");
       return;
     }
 
     try {
-      setLoading(true);
+      setSaving(true);
 
-      // Prepare form data
       const data = new FormData();
       data.append("name", formData.name);
       data.append("role", formData.role);
       data.append("message", formData.message);
-      if (formData.img) data.append("image", formData.img);
+      if (newImage) data.append("image", newImage);
 
       const res = await fetch(`${API_URL}/api/testimonials`, {
         method: "POST",
@@ -59,101 +65,103 @@ export default function AddTestimonialPage() {
       });
 
       const result = await res.json();
+      if (!res.ok) throw new Error(result.message || "Failed to add testimonial");
 
-      if (res.ok) {
-        alert("Testimonial added successfully!");
-        router.push("/admin/testimonials");
-      } else {
-        alert(result.message || "Failed to add testimonial.");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Error adding testimonial.");
+      router.push("/admin/testimonials");
+    } catch (err: any) {
+      setError(err.message || "Error adding testimonial");
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
   return (
-    <div className="p-8 max-w-3xl mx-auto">
-      {/* HEADER */}
-      <div className="flex items-center gap-3 mb-6">
-        <button
-          onClick={() => router.back()}
-          className="p-2 rounded bg-gray-100 hover:bg-gray-200"
-        >
-          <ArrowLeft size={18} />
-        </button>
-        <h1 className="text-2xl font-bold text-[#2a1a7b]">
-          Add Testimonial
-        </h1>
-      </div>
+    <div className="max-w-xl mx-auto px-6 py-12">
+      <h1 className="text-3xl font-bold text-[#3f1a7b] mb-6">
+        Add Testimonial
+      </h1>
 
-      {/* FORM */}
       <form
         onSubmit={handleSubmit}
-        className="bg-white rounded-xl shadow p-6 space-y-6"
+        className="bg-white p-6 rounded-xl shadow space-y-4"
       >
-        {/* IMAGE UPLOAD */}
+        {/* ERROR */}
+        {error && (
+          <div className="bg-red-100 text-red-700 p-2 rounded text-sm">
+            {error}
+          </div>
+        )}
+
+        {/* IMAGE */}
         <div>
-          <label className="block font-medium mb-2">Photo</label>
+          <label className="block text-sm font-semibold mb-1">Photo</label>
           <div className="flex items-center gap-6">
-            <div className="w-24 h-24 rounded-full bg-gray-100 overflow-hidden relative">
+            <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100 relative">
               <Image
-                src={preview || "/user.png"}
+                src={imagePreview}
                 alt="Preview"
                 fill
                 className="object-cover"
+                unoptimized
               />
             </div>
 
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="block text-sm"
-            />
+            <div className="flex flex-col gap-2">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="block text-sm"
+              />
+
+              {newImage && (
+                <button
+                  type="button"
+                  onClick={removeImage}
+                  className="text-sm text-red-600 font-semibold hover:underline"
+                >
+                  Remove Image
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
         {/* NAME */}
         <div>
-          <label className="block font-medium mb-2">Name</label>
+          <label className="block font-medium mb-1">Name</label>
           <input
             type="text"
             name="name"
-            required
             value={formData.name}
             onChange={handleChange}
-            placeholder="Enter name"
-            className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#2a1a7b]"
+            required
+            className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#3f1a7b]"
           />
         </div>
 
         {/* ROLE */}
         <div>
-          <label className="block font-medium mb-2">Role</label>
+          <label className="block font-medium mb-1">Role</label>
           <input
             type="text"
             name="role"
             value={formData.role}
             onChange={handleChange}
-            placeholder="Parent"
-            className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#2a1a7b]"
+            className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#3f1a7b]"
           />
         </div>
 
         {/* MESSAGE */}
         <div>
-          <label className="block font-medium mb-2">Message</label>
+          <label className="block font-medium mb-1">Message</label>
           <textarea
             name="message"
             rows={5}
-            required
             value={formData.message}
             onChange={handleChange}
-            placeholder="Write testimonial message..."
-            className="w-full border rounded-lg px-4 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-[#2a1a7b]"
+            required
+            className="w-full border rounded-lg px-4 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-[#3f1a7b]"
           />
         </div>
 
@@ -169,12 +177,12 @@ export default function AddTestimonialPage() {
 
           <button
             type="submit"
-            disabled={loading}
-            className={`px-6 py-2 rounded-lg bg-[#2a1a7b] text-white hover:bg-[#1f145c] transition ${
-              loading ? "opacity-70 cursor-not-allowed" : ""
+            disabled={saving}
+            className={`px-6 py-2 rounded-lg bg-[#3f1a7b] text-white hover:bg-[#2a1a7b] transition ${
+              saving ? "opacity-70 cursor-not-allowed" : ""
             }`}
           >
-            {loading ? "Saving..." : "Save Testimonial"}
+            {saving ? "Saving..." : "Save Testimonial"}
           </button>
         </div>
       </form>
