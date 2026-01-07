@@ -150,7 +150,7 @@ export default function Footer() {
 
             {/* Copyright */}
             <div className="text-center md:text-left order-2 md:order-1">
-              Copyright © 2025 – 
+              Copyright © 2026 – 
               <span className="text-yellow-300 font-medium"> Autism</span>. All Rights Reserved
               <span className="block md:inline md:ml-2">
                 | Powered by{" "}
