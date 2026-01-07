@@ -148,12 +148,24 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white">
 
+            {/* Copyright */}
             <div className="text-center md:text-left order-2 md:order-1">
-              Copyright © 2025 -
-              <span className="text-yellow-300 font-medium"> Autism</span> - All Rights
-              Reserved
+              Copyright © 2025 – 
+              <span className="text-yellow-300 font-medium"> Autism</span>. All Rights Reserved
+              <span className="block md:inline md:ml-2">
+                | Powered by{" "}
+                <a
+                  href="https://netrootstech.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-yellow-300 font-semibold hover:underline hover:text-yellow-400 transition"
+                >
+                  NetRoots Technologies
+                </a>
+              </span>
             </div>
 
+            {/* Social Links */}
             <div className="flex items-center gap-4 order-1 md:order-2">
               <span className="text-sm">Follow Us</span>
               <div className="flex gap-4">
@@ -166,6 +178,7 @@ export default function Footer() {
                 >
                   <FaTwitter />
                 </a>
+
                 <a
                   href="https://facebook.com"
                   target="_blank"
@@ -175,6 +188,7 @@ export default function Footer() {
                 >
                   <FaFacebookF />
                 </a>
+
                 <a
                   href="https://youtube.com"
                   target="_blank"
@@ -186,9 +200,11 @@ export default function Footer() {
                 </a>
               </div>
             </div>
+
           </div>
         </div>
       </div>
+
     </footer>
   );
 }

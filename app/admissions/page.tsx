@@ -135,7 +135,7 @@ export default function Admissions(): React.JSX.Element {
               {step.title === "Registration" && (
                 <div className="mt-4 flex justify-center">
                   <Link
-                    href="/Admissions/appointment"
+                    href="/admissions/appointment"
                     className="px-8 py-3 rounded-full bg-yellow-400 text-[#3f1a7b] font-semibold hover:bg-[#ffc107] transition"
                   >
                     Book an Appointment
