@@ -104,7 +104,7 @@ export default function HomePage() {
 
       {/* Hero */}
       <section className="relative h-[70vh] w-full bg-[#3f1a7b]">
-        <div className="absolute inset-0 bg-black/30"></div>
+        {/* <div className="absolute inset-0 bg-black/30"></div> */}
         <div className="relative z-10 h-full flex items-center justify-center">
           <h1 className="text-white text-4xl md:text-5xl font-bold">
             News & Updates

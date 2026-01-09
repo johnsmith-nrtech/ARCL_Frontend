@@ -27,23 +27,49 @@ interface FinancialPDF {
 
 const API = process.env.NEXT_PUBLIC_API_URL!;
 
+// Helper to handle Cloudinary vs local URLs
+const resolveUrl = (url: string) => {
+  if (!url) return "";
+  return url.startsWith("https") ? url : `${API}${url}`;
+};
+
 export default function AdminPage() {
   const [governingBody, setGoverningBody] = useState<Member[]>([]);
   const [executiveTeam, setExecutiveTeam] = useState<Member[]>([]);
   const [certifications, setCertifications] = useState<Certification[]>([]);
   const [financialPDFs, setFinancialPDFs] = useState<FinancialPDF[]>([]);
 
+  const fetchData = async () => {
+    try {
+      const [govRes, execRes, certRes, finRes] = await Promise.all([
+        fetch(`${API}/api/governing`).then(r => r.json()),
+        fetch(`${API}/api/executive`).then(r => r.json()),
+        fetch(`${API}/api/certifications`).then(r => r.json()),
+        fetch(`${API}/api/financial`).then(r => r.json()),
+      ]);
+      setGoverningBody(govRes);
+      setExecutiveTeam(execRes);
+      setCertifications(certRes);
+      setFinancialPDFs(finRes);
+    } catch (err) {
+      console.error("Failed to fetch Admin data:", err);
+    }
+  };
+
   useEffect(() => {
-    fetch(`${API}/api/governing`).then(r => r.json()).then(setGoverningBody);
-    fetch(`${API}/api/executive`).then(r => r.json()).then(setExecutiveTeam);
-    fetch(`${API}/api/certifications`).then(r => r.json()).then(setCertifications);
-    fetch(`${API}/api/financial`).then(r => r.json()).then(setFinancialPDFs);
+    fetchData();
   }, []);
 
   const deleteItem = async (url: string, refresh: () => void) => {
     if (!confirm("Are you sure?")) return;
-    await fetch(url, { method: "DELETE" });
-    refresh();
+    try {
+      const res = await fetch(url, { method: "DELETE" });
+      if (!res.ok) throw new Error("Delete failed");
+      refresh();
+    } catch (err) {
+      console.error("Delete error:", err);
+      alert("Failed to delete. Check console for details.");
+    }
   };
 
   const TableWrapper = ({ title, addLink, children }: any) => (
@@ -59,7 +85,9 @@ export default function AdminPage() {
       </div>
 
       <div className="overflow-x-auto bg-white shadow rounded-lg">
-        <table className="w-full border-collapse min-w-[500px] sm:min-w-full">{children}</table>
+        <table className="w-full border-collapse min-w-[500px] sm:min-w-full">
+          {children}
+        </table>
       </div>
     </section>
   );
@@ -82,16 +110,31 @@ export default function AdminPage() {
           {governingBody.map(m => (
             <tr key={m._id} className="border-t">
               <td className="p-2 sm:p-4">
-                <Image src={`${API}${m.image}`} alt={m.name} width={50} height={50} unoptimized className="rounded-full" />
+                <Image
+                  src={resolveUrl(m.image)}
+                  alt={m.name}
+                  width={50}
+                  height={50}
+                  unoptimized
+                  className="rounded-full"
+                />
               </td>
               <td className="p-2 sm:p-4">{m.name}</td>
               <td className="p-2 sm:p-4">{m.position}</td>
               <td className="p-2 sm:p-4">
                 <div className="flex flex-col sm:flex-row justify-center sm:gap-2 gap-1">
-                  <Link href={`/admin/about/governing/edit/${m._id}`} className="flex items-center gap-1 text-sm px-2 sm:px-3 py-1 border rounded-md text-blue-600 hover:bg-blue-50 hover:border-blue-400 transition">
+                  <Link
+                    href={`/admin/about/governing/edit/${m._id}`}
+                    className="flex items-center gap-1 text-sm px-2 sm:px-3 py-1 border rounded-md text-blue-600 hover:bg-blue-50 hover:border-blue-400 transition"
+                  >
                     <FaEdit size={14} /> Edit
                   </Link>
-                  <button onClick={() => deleteItem(`${API}/api/governing/${m._id}`, () => fetch(`${API}/api/governing`).then(r => r.json()).then(setGoverningBody))} className="flex items-center gap-1 text-sm px-2 sm:px-3 py-1 border border-red-400 text-red-600 rounded-md hover:bg-red-50 hover:border-red-500 transition">
+                  <button
+                    onClick={() =>
+                      deleteItem(`${API}/api/governing/${m._id}`, fetchData)
+                    }
+                    className="flex items-center gap-1 text-sm px-2 sm:px-3 py-1 border border-red-400 text-red-600 rounded-md hover:bg-red-50 hover:border-red-500 transition"
+                  >
                     <FaTrash size={14} /> Delete
                   </button>
                 </div>
@@ -115,16 +158,31 @@ export default function AdminPage() {
           {executiveTeam.map(m => (
             <tr key={m._id} className="border-t">
               <td className="p-2 sm:p-4">
-                <Image src={`${API}${m.image}`} alt={m.name} width={50} height={50} unoptimized className="rounded-full" />
+                <Image
+                  src={resolveUrl(m.image)}
+                  alt={m.name}
+                  width={50}
+                  height={50}
+                  unoptimized
+                  className="rounded-full"
+                />
               </td>
               <td className="p-2 sm:p-4">{m.name}</td>
               <td className="p-2 sm:p-4">{m.position}</td>
               <td className="p-2 sm:p-4">
                 <div className="flex flex-col sm:flex-row justify-center sm:gap-2 gap-1">
-                  <Link href={`/admin/about/executive/edit/${m._id}`} className="flex items-center gap-1 text-sm px-2 sm:px-3 py-1 border rounded-md text-blue-600 hover:bg-blue-50 hover:border-blue-400 transition">
+                  <Link
+                    href={`/admin/about/executive/edit/${m._id}`}
+                    className="flex items-center gap-1 text-sm px-2 sm:px-3 py-1 border rounded-md text-blue-600 hover:bg-blue-50 hover:border-blue-400 transition"
+                  >
                     <FaEdit size={14} /> Edit
                   </Link>
-                  <button onClick={() => deleteItem(`${API}/api/executive/${m._id}`, () => fetch(`${API}/api/executive`).then(r => r.json()).then(setExecutiveTeam))} className="flex items-center gap-1 text-sm px-2 sm:px-3 py-1 border border-red-400 text-red-600 rounded-md hover:bg-red-50 hover:border-red-500 transition">
+                  <button
+                    onClick={() =>
+                      deleteItem(`${API}/api/executive/${m._id}`, fetchData)
+                    }
+                    className="flex items-center gap-1 text-sm px-2 sm:px-3 py-1 border border-red-400 text-red-600 rounded-md hover:bg-red-50 hover:border-red-500 transition"
+                  >
                     <FaTrash size={14} /> Delete
                   </button>
                 </div>
@@ -148,18 +206,40 @@ export default function AdminPage() {
           {certifications.map(c => (
             <tr key={c._id} className="border-t">
               <td className="p-2 sm:p-4">
-                <Image src={`${API}${c.image}`} alt={c.title} width={50} height={50} unoptimized />
+                <Image
+                  src={resolveUrl(c.image)}
+                  alt={c.title}
+                  width={50}
+                  height={50}
+                  unoptimized
+                  className="rounded-md"
+                />
               </td>
               <td className="p-2 sm:p-4">{c.title}</td>
               <td className="p-2 sm:p-4 text-center">
-                <a href={`${API}${c.pdf}`} target="_blank" className="text-red-600"><FaFilePdf /></a>
+                <a
+                  href={resolveUrl(c.pdf)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-red-600"
+                >
+                  <FaFilePdf />
+                </a>
               </td>
               <td className="p-2 sm:p-4">
                 <div className="flex flex-col sm:flex-row justify-center sm:gap-2 gap-1">
-                  <Link href={`/admin/about/certifications/edit/${c._id}`} className="flex items-center gap-1 text-sm px-2 sm:px-3 py-1 border rounded-md text-blue-600 hover:bg-blue-50 hover:border-blue-400 transition">
+                  <Link
+                    href={`/admin/about/certifications/edit/${c._id}`}
+                    className="flex items-center gap-1 text-sm px-2 sm:px-3 py-1 border rounded-md text-blue-600 hover:bg-blue-50 hover:border-blue-400 transition"
+                  >
                     <FaEdit size={14} /> Edit
                   </Link>
-                  <button onClick={() => deleteItem(`${API}/api/certifications/${c._id}`, () => fetch(`${API}/api/certifications`).then(r => r.json()).then(setCertifications))} className="flex items-center gap-1 text-sm px-2 sm:px-3 py-1 border border-red-400 text-red-600 rounded-md hover:bg-red-50 hover:border-red-500 transition">
+                  <button
+                    onClick={() =>
+                      deleteItem(`${API}/api/certifications/${c._id}`, fetchData)
+                    }
+                    className="flex items-center gap-1 text-sm px-2 sm:px-3 py-1 border border-red-400 text-red-600 rounded-md hover:bg-red-50 hover:border-red-500 transition"
+                  >
                     <FaTrash size={14} /> Delete
                   </button>
                 </div>
@@ -169,7 +249,7 @@ export default function AdminPage() {
         </tbody>
       </TableWrapper>
 
-      {/* Financial Reports */}
+      {/* Financial PDFs */}
       <TableWrapper title="Financial Audit Reports" addLink="/admin/about/financial/add">
         <thead className="bg-[#260e58] text-white">
           <tr>
@@ -183,14 +263,29 @@ export default function AdminPage() {
             <tr key={f._id} className="border-t">
               <td className="p-2 sm:p-4">{f.title}</td>
               <td className="p-2 sm:p-4 text-center">
-                <a href={`${API}${f.pdf}`} target="_blank" className="text-red-600"><FaFilePdf /></a>
+                <a
+                  href={resolveUrl(f.pdf)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-red-600"
+                >
+                  <FaFilePdf />
+                </a>
               </td>
               <td className="p-2 sm:p-4">
                 <div className="flex flex-col sm:flex-row justify-center sm:gap-2 gap-1">
-                  <Link href={`/admin/about/financial/edit/${f._id}`} className="flex items-center gap-1 text-sm px-2 sm:px-3 py-1 border rounded-md text-blue-600 hover:bg-blue-50 hover:border-blue-400 transition">
+                  <Link
+                    href={`/admin/about/financial/edit/${f._id}`}
+                    className="flex items-center gap-1 text-sm px-2 sm:px-3 py-1 border rounded-md text-blue-600 hover:bg-blue-50 hover:border-blue-400 transition"
+                  >
                     <FaEdit size={14} /> Edit
                   </Link>
-                  <button onClick={() => deleteItem(`${API}/api/financial/${f._id}`, () => fetch(`${API}/api/financial`).then(r => r.json()).then(setFinancialPDFs))} className="flex items-center gap-1 text-sm px-2 sm:px-3 py-1 border border-red-400 text-red-600 rounded-md hover:bg-red-50 hover:border-red-500 transition">
+                  <button
+                    onClick={() =>
+                      deleteItem(`${API}/api/financial/${f._id}`, fetchData)
+                    }
+                    className="flex items-center gap-1 text-sm px-2 sm:px-3 py-1 border border-red-400 text-red-600 rounded-md hover:bg-red-50 hover:border-red-500 transition"
+                  >
                     <FaTrash size={14} /> Delete
                   </button>
                 </div>

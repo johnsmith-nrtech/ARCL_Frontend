@@ -11,8 +11,10 @@ export default function DonatePage() {
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [success, setSuccess] = useState(false);
+
   const API_URL = process.env.NEXT_PUBLIC_API_URL!;
 
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,14 +24,24 @@ export default function DonatePage() {
       return;
     }
 
+    setLoading(true); // <-- start loading
+
     try {
-      const res = await fetch(`${API_URL}/api/donations`, {
+      const res = await fetch(`${API_URL}/api/contact/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firstName, lastName, email, phone, message }),
+        body: JSON.stringify({
+          name: `${firstName} ${lastName}`,
+          email,
+          phone,
+          subject: "Website Donation",
+          message: message || "Donation inquiry from website",
+        }),
       });
 
-      if (res.ok) {
+      const data = await res.json();
+
+      if (data.success) {
         setSuccess(true);
         setFirstName("");
         setLastName("");
@@ -42,16 +54,18 @@ export default function DonatePage() {
     } catch (err) {
       console.error(err);
       alert("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false); // <-- stop loading
     }
   };
+
 
   return (
     <main className="bg-white min-h-screen text-gray-900">
       <Navbar />
 
       {/* Hero */}
-     <section className="relative bg-linear-to-b h-[75vh] from-[#3f1a7b] to-[#3f1a7b] py-48 text-center">
-
+      <section className="relative bg-linear-to-b h-[75vh] from-[#3f1a7b] to-[#3f1a7b] py-48 text-center">
         <div className="max-w-4xl mx-auto px-6">
           <h1 className="text-5xl md:text-6xl font-hand font-bold text-white mb-4">
             Donate Now
@@ -62,8 +76,7 @@ export default function DonatePage() {
         </div>
       </section>
 
-
-              {/* Info Section */}
+      {/* Info Section */}
       <section className="max-w-4xl mx-auto px-2 py-8">
         <h2 className="text-3xl font-bold text-[#3f1a7b] mb-6 text-center">
           How Your Donation Helps
@@ -99,87 +112,66 @@ export default function DonatePage() {
           <p className="text-gray-700 mb-6 text-center">
             Complete the form below, and we’ll get in touch with you soon.
           </p>
+
           <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <label className="block mb-2 font-semibold text-gray-700">
-                First Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                placeholder="Your First Name"
-                required
-              />
-            </div>
+            <input
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              placeholder="Your First Name"
+              required
+              className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-yellow-400"
+            />
 
-            <div>
-              <label className="block mb-2 font-semibold text-gray-700">
-                Last Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                placeholder="Your Last Name"
-                required
-              />
-            </div>
+            <input
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              placeholder="Your Last Name"
+              required
+              className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-yellow-400"
+            />
 
-            <div>
-              <label className="block mb-2 font-semibold text-gray-700">
-                Phone Number <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                placeholder="03XXXXXXXXX"
-                required
-              />
-            </div>
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="03XXXXXXXXX"
+              required
+              className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-yellow-400"
+            />
 
-            <div>
-              <label className="block mb-2 font-semibold text-gray-700">
-                Email Address <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                placeholder="example@email.com"
-                required
-              />
-            </div>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="example@email.com"
+              required
+              className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-yellow-400"
+            />
 
-            <div>
-              <label className="block mb-2 font-semibold text-gray-700">
-                Message
-              </label>
-              <textarea
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                placeholder="Your message..."
-                rows={4}
-              ></textarea>
-            </div>
+            <textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Your message..."
+              rows={4}
+              className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-yellow-400"
+            />
 
             <button
               type="submit"
-              className="w-full py-3 rounded-full bg-yellow-400 text-[#3f1a7b] font-semibold hover:bg-[#ffc107] transition"
+              disabled={loading} // optional: disable button while sending
+              className={`w-full py-3 rounded-full bg-yellow-400 text-[#3f1a7b] font-semibold hover:bg-[#ffc107] ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
             >
-              Submit
+              {loading ? "Sending..." : "Send Donation Request"}
             </button>
+
+
             {success && (
-            <p className="text-green-600 mb-4 text-center font-semibold">
-              Thank you! We received your donation request.
-            </p>
-          )}
+              <p className="text-green-600 text-center font-semibold">
+                Thank you! We received your donation request.
+              </p>
+            )}
           </form>
         </div>
       </section>

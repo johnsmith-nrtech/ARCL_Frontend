@@ -7,12 +7,14 @@ import Footer from "@/components/footer";
 export default function AppointmentPage(): React.JSX.Element {
   const today = new Date();
   const minDate = new Date(today);
-  minDate.setDate(today.getDate() + 1); // ❌ no today / past
+  minDate.setDate(today.getDate() + 1); // no today / past
 
   const maxDate = new Date(today);
-  maxDate.setMonth(today.getMonth() + 1); // ❌ no after 1 month
+  maxDate.setMonth(today.getMonth() + 1); // max 1 month ahead
 
   const formatDate = (date: Date) => date.toISOString().split("T")[0];
+
+  const API_URL = process.env.NEXT_PUBLIC_API_URL!;
 
   const [formData, setFormData] = useState({
     parentName: "",
@@ -26,6 +28,8 @@ export default function AppointmentPage(): React.JSX.Element {
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -42,49 +46,71 @@ export default function AppointmentPage(): React.JSX.Element {
 
     if (!formData.parentName.trim())
       newErrors.parentName = "Parent name is required";
-
-    if (!formData.phone.trim())
-      newErrors.phone = "Phone number is required";
-
-    if (!formData.email.includes("@"))
-      newErrors.email = "Valid email is required";
-
-    if (!formData.preferredDate)
-      newErrors.preferredDate = "Please select a valid date";
-
-    if (!formData.preferredTime)
-      newErrors.preferredTime = "Please select a time slot";
+    if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
+    if (!formData.email.includes("@")) newErrors.email = "Valid email is required";
+    if (!formData.preferredDate) newErrors.preferredDate = "Please select a valid date";
+    if (!formData.preferredTime) newErrors.preferredTime = "Please select a time slot";
 
     if (formData.preferredDate) {
       const selected = new Date(formData.preferredDate);
-      if (selected <= today)
-        newErrors.preferredDate = "Date must be after today";
-
-      if (selected > maxDate)
-        newErrors.preferredDate = "Date cannot be more than 1 month ahead";
+      if (selected <= today) newErrors.preferredDate = "Date must be after today";
+      if (selected > maxDate) newErrors.preferredDate = "Date cannot be more than 1 month ahead";
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
 
-    console.log("Appointment Data:", formData);
-    alert("Appointment request submitted successfully!");
+    setLoading(true);
+    setSuccess(false);
 
-    setFormData({
-      parentName: "",
-      email: "",
-      phone: "",
-      childName: "",
-      childAge: "",
-      preferredDate: "",
-      preferredTime: "",
-      message: "",
-    });
+    try {
+      const res = await fetch(`${API_URL}/api/contact/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.parentName,
+          email: formData.email,
+          phone: formData.phone,
+          subject: "Appointment Request",
+          message: `
+            Parent Name: ${formData.parentName}
+            Child Name: ${formData.childName}
+            Child Age: ${formData.childAge}
+            Preferred Date: ${formData.preferredDate}
+            Preferred Time: ${formData.preferredTime}
+            Additional Message: ${formData.message || "N/A"}
+          `,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setSuccess(true);
+        setFormData({
+          parentName: "",
+          email: "",
+          phone: "",
+          childName: "",
+          childAge: "",
+          preferredDate: "",
+          preferredTime: "",
+          message: "",
+        });
+      } else {
+        alert("Submission failed. Please try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -114,9 +140,7 @@ export default function AppointmentPage(): React.JSX.Element {
           {/* Parent Info */}
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <label className="block font-medium mb-1">
-                Parent / Guardian Name
-              </label>
+              <label className="block font-medium mb-1">Parent / Guardian Name</label>
               <input
                 type="text"
                 name="parentName"
@@ -138,9 +162,7 @@ export default function AppointmentPage(): React.JSX.Element {
                 onChange={handleChange}
                 className="w-full border rounded-lg px-4 py-2"
               />
-              {errors.phone && (
-                <p className="text-red-500 text-sm">{errors.phone}</p>
-              )}
+              {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
             </div>
           </div>
 
@@ -153,9 +175,7 @@ export default function AppointmentPage(): React.JSX.Element {
               onChange={handleChange}
               className="w-full border rounded-lg px-4 py-2"
             />
-            {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email}</p>
-            )}
+            {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
           </div>
 
           {/* Child Info */}
@@ -188,9 +208,7 @@ export default function AppointmentPage(): React.JSX.Element {
           {/* Appointment Date & Time */}
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <label className="block font-medium mb-1">
-                Preferred Date
-              </label>
+              <label className="block font-medium mb-1">Preferred Date</label>
               <input
                 type="date"
                 name="preferredDate"
@@ -201,16 +219,12 @@ export default function AppointmentPage(): React.JSX.Element {
                 className="w-full border rounded-lg px-4 py-2"
               />
               {errors.preferredDate && (
-                <p className="text-red-500 text-sm">
-                  {errors.preferredDate}
-                </p>
+                <p className="text-red-500 text-sm">{errors.preferredDate}</p>
               )}
             </div>
 
             <div>
-              <label className="block font-medium mb-1">
-                Preferred Time
-              </label>
+              <label className="block font-medium mb-1">Preferred Time</label>
               <select
                 name="preferredTime"
                 value={formData.preferredTime}
@@ -222,18 +236,14 @@ export default function AppointmentPage(): React.JSX.Element {
                 <option value="Afternoon">Afternoon (12:00–3:00)</option>
               </select>
               {errors.preferredTime && (
-                <p className="text-red-500 text-sm">
-                  {errors.preferredTime}
-                </p>
+                <p className="text-red-500 text-sm">{errors.preferredTime}</p>
               )}
             </div>
           </div>
 
           {/* Message */}
           <div>
-            <label className="block font-medium mb-1">
-              Additional Information
-            </label>
+            <label className="block font-medium mb-1">Additional Information</label>
             <textarea
               name="message"
               rows={4}
@@ -247,10 +257,16 @@ export default function AppointmentPage(): React.JSX.Element {
           <div className="text-center">
             <button
               type="submit"
-              className="px-10 py-3 rounded-full bg-yellow-400 text-[#3f1a7b] font-semibold hover:bg-[#ffc107]"
+              disabled={loading}
+              className={`px-10 py-3 rounded-full bg-yellow-400 text-[#3f1a7b] font-semibold hover:bg-[#ffc107] ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
             >
-              Submit Appointment Request
+              {loading ? "Sending..." : "Submit Appointment Request"}
             </button>
+            {success && (
+              <p className="text-green-600 mt-3 font-semibold">
+                Your appointment request has been sent!
+              </p>
+            )}
           </div>
         </form>
       </section>

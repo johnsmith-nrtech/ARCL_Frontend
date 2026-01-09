@@ -126,7 +126,7 @@ export default function TestimonialSection() {
                 <div className="mt-12 flex-1 flex flex-col justify-between">
                   <div>
                     <h3 className="font-bold text-lg text-[#2a1a7b]">{t.name}</h3>
-                    <p className="text-gray-600 mt-3 text-sm leading-relaxed">{t.message}</p>
+                    <p className="text-gray-600 mt-3 text-justify text-sm leading-relaxed">{t.message}</p>
                   </div>
                   <p className="mt-4 font-semibold text-[#2a1a7b]">{t.role}</p>
                 </div>

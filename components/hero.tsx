@@ -10,14 +10,14 @@ const images = [
     src: "/banners/BANNER1.jpg",
     alt: "ARCL Image 1",
     buttonText: "Learn More About Us",
-    link: "/about",
+    link: "/AboutUs",
     sideImage: "/slides/kid1.jpg",
   },
   {
     src: "/banners/BANNER2.jpg",
     alt: "ARCL Image 2",
     buttonText: "Explore Our Activities",
-    link: "/activities",
+    link: "/Activities",
     sideImage: "/slides/kid2.jpg",
   },
   {

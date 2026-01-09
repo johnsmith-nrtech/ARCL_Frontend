@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 
-export default function ContactUs() {
+export default function ContactUs({ id }: { id?: string })  {
   const [loading, setLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
   const [form, setForm] = useState({
@@ -57,7 +57,7 @@ export default function ContactUs() {
 };
 
   return (
-    <section className="w-full bg-white py-16">
+    <section id={id} className="w-full bg-white py-16">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12 px-6">
         {/* Left Side - Contact Form */}
         <div className="lg:w-1/2 bg-[#3f1a7b] text-white p-8 rounded-xl shadow-lg">
@@ -113,22 +113,22 @@ export default function ContactUs() {
 
         {/* Right Side - Map and Address */}
         <div className="lg:w-1/2 flex flex-col gap-4">
-          <h2 className="text-3xl font-bold text-[#3f1a7b] mb-4">Our Location</h2>
+          <h2 className="text-3xl font-bold text-[#3f1a7b] mt-8 mb-4">Our Location</h2>
           <p className="text-[#3f1a7b] mb-4 leading-relaxed">
             Autism Resource Center Lahore<br />
             74 Defence Rd, Block C2, Engineers Town, Lahore, Pakistan
           </p>
           <div className="w-full h-96 rounded-xl overflow-hidden shadow-lg">
-  <iframe
-    src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCMtKh7m8CZ8VrNYCxvXzFabEfCkZxLKxs&q=Autism+Resource+Center+Lahore,74+Defence+Rd,Block+C2,Engineers+Town,Lahore,Pakistan&zoom=10"
-    width="100%"
-    height="100%"
-    style={{ border: 0 }}
-    allowFullScreen
-    loading="lazy"
-    referrerPolicy="no-referrer-when-downgrade"
-  ></iframe>
-</div>
+          <iframe
+            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCMtKh7m8CZ8VrNYCxvXzFabEfCkZxLKxs&q=Autism+Resource+Center+Lahore,74+Defence+Rd,Block+C2,Engineers+Town,Lahore,Pakistan&zoom=10"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
 
         </div>
       </div>

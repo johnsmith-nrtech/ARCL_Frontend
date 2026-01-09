@@ -1,19 +1,27 @@
+"use client";
+
 import Image from "next/image";
-import Link from "next/link";
 import { Facebook, Twitter, Linkedin, Mail } from "lucide-react";
 
 export default function TherapistHero() {
+
+  const scrollToContact = () => {
+    const contactSection = document.getElementById("contact-us");
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <>
       {/* Desktop & Tablet Hero */}
       <section className="w-full min-h-screen h-200 bg-white flex items-center px-6 md:px-12 lg:px-24 hidden md:flex">
         <div className="max-w-8xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          {/* Left Content - President's Message */}
+          {/* Left Content */}
           <div className="space-y-8 md:-ml-15">
             <h1 className="text-4xl md:text-5xl font-bold leading-tight text-gray-900">
               Presidential <span className="text-[#3f1a7b]">Message</span>
             </h1>
-
             <p className="text-gray-700 text-lg text-justify leading-relaxed max-w-2xl">
               ARCL, founded in 2015, is committed to providing compassionate
               care and support for children with autism. We believe autism is
@@ -32,16 +40,12 @@ export default function TherapistHero() {
 
             <div className="pt-6">
               <p className="text-lg text-gray-700 font-medium">Sincerely,</p>
-              <p className="text-2xl font-bold text-[#3f1a7b] mt-2">
-                Dr. Ahmad Faraz Bhatti
-              </p>
-              <p className="text-lg text-gray-700">
-                President, Autism Resource Centre Lahore
-              </p>
+              <p className="text-2xl font-bold text-[#3f1a7b] mt-2">Dr. Ahmad Faraz Bhatti</p>
+              <p className="text-lg text-gray-700">President, Autism Resource Centre Lahore</p>
             </div>
           </div>
 
-          {/* Right Content - President's Image + Card */}
+          {/* Right Content */}
           <div className="relative flex md:-mr-10 justify-center md:justify-end">
             <div className="relative">
               <Image
@@ -55,15 +59,9 @@ export default function TherapistHero() {
 
               {/* Social Icons */}
               <div className="absolute top-8 -left-4 flex flex-col gap-3">
-                <Link href="#" className="bg-yellow-400 text-[#3f1a7b] p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
-                  <Facebook size={20} />
-                </Link>
-                <Link href="#" className="bg-yellow-400 text-[#3f1a7b] p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
-                  <Twitter size={20} />
-                </Link>
-                <Link href="#" className="bg-yellow-400 text-[#3f1a7b] p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
-                  <Linkedin size={20} />
-                </Link>
+                <div className="bg-yellow-400 text-[#3f1a7b] p-3 rounded-full shadow-lg hover:scale-110 transition-transform"><Facebook size={20} /></div>
+                <div className="bg-yellow-400 text-[#3f1a7b] p-3 rounded-full shadow-lg hover:scale-110 transition-transform"><Twitter size={20} /></div>
+                <div className="bg-yellow-400 text-[#3f1a7b] p-3 rounded-full shadow-lg hover:scale-110 transition-transform"><Linkedin size={20} /></div>
               </div>
 
               {/* Info Card */}
@@ -76,12 +74,12 @@ export default function TherapistHero() {
                   <h3 className="text-2xl font-bold">Dr. Ahmad Faraz Bhatti</h3>
                   <p className="text-sm opacity-90 mb-6">President & Founder</p>
 
-                  <Link
-                    href="/contact"
+                  <button
+                    onClick={scrollToContact}
                     className="w-full bg-yellow-400 hover:bg-yellow-500 text-[#3f1a7b] font-bold py-3 rounded-lg transition-all duration-300 hover:shadow-lg"
                   >
                     CONTACT US
-                  </Link>
+                  </button>
                 </div>
               </div>
             </div>
@@ -105,34 +103,24 @@ export default function TherapistHero() {
           />
 
           <div className="absolute -top-4 right-0 flex flex-row gap-2">
-            <Link href="#" className="bg-yellow-400 text-[#3f1a7b] p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
-              <Facebook size={18} />
-            </Link>
-            <Link href="#" className="bg-yellow-400 text-[#3f1a7b] p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
-              <Twitter size={18} />
-            </Link>
-            <Link href="#" className="bg-yellow-400 text-[#3f1a7b] p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
-              <Linkedin size={18} />
-            </Link>
+            <div className="bg-yellow-400 text-[#3f1a7b] p-2 rounded-full shadow-lg hover:scale-110 transition-transform"><Facebook size={18} /></div>
+            <div className="bg-yellow-400 text-[#3f1a7b] p-2 rounded-full shadow-lg hover:scale-110 transition-transform"><Twitter size={18} /></div>
+            <div className="bg-yellow-400 text-[#3f1a7b] p-2 rounded-full shadow-lg hover:scale-110 transition-transform"><Linkedin size={18} /></div>
           </div>
         </div>
 
         <div className="space-y-4 text-center px-2">
           <p className="text-gray-700 text-justify leading-relaxed">
-            ARCL, founded in 2015, provides compassionate care and support for children with autism. We believe autism is a condition to be understood and embraced.
+            ARCL, founded in 2015, provides compassionate care...
           </p>
           <p className="text-gray-700 text-justify leading-relaxed">
-            Our mission includes creating a residential autism village to empower adults with autism and foster independence. Join us in building an inclusive world.
+            Our mission includes creating a residential autism village...
           </p>
 
           <div className="pt-4">
             <p className="text-gray-700 text-base font-medium">Sincerely,</p>
-            <p className="text-xl font-bold text-[#3f1a7b] mt-1">
-              Dr. Ahmad Faraz Bhatti
-            </p>
-            <p className="text-gray-700 text-base">
-              President, Autism Resource Centre Lahore
-            </p>
+            <p className="text-xl font-bold text-[#3f1a7b] mt-1">Dr. Ahmad Faraz Bhatti</p>
+            <p className="text-gray-700 text-base">President, Autism Resource Centre Lahore</p>
           </div>
         </div>
 
@@ -145,12 +133,12 @@ export default function TherapistHero() {
             <h3 className="text-xl font-bold">Dr. Ahmad Faraz Bhatti</h3>
             <p className="text-sm opacity-90 mb-4">President & Founder</p>
 
-            <Link
-              href="/contact"
+            <button
+              onClick={scrollToContact}
               className="w-full bg-yellow-400 hover:bg-yellow-500 text-[#3f1a7b] font-bold py-2 rounded-lg transition-all duration-300 hover:shadow-lg"
             >
               CONTACT US
-            </Link>
+            </button>
           </div>
         </div>
       </section>

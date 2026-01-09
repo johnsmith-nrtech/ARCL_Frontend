@@ -30,6 +30,12 @@ interface FinancialPDF {
   pdf: string;
 }
 
+/* ================= HELPERS ================= */
+const resolveUrl = (url: string) => {
+  if (!url) return "";
+  return url.startsWith("http") ? url : `${API_URL}${url}`;
+};
+
 /* ================= PAGE ================= */
 export default function AboutUsPage() {
   const [governingBodyMembers, setGoverningBodyMembers] = useState<Member[]>([]);
@@ -40,16 +46,17 @@ export default function AboutUsPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const governingRes = await fetch(`${API_URL}/api/governing`);
+        const [governingRes, executiveRes, certRes, financialRes] =
+          await Promise.all([
+            fetch(`${API_URL}/api/governing`),
+            fetch(`${API_URL}/api/executive`),
+            fetch(`${API_URL}/api/certifications`),
+            fetch(`${API_URL}/api/financial`),
+          ]);
+
         setGoverningBodyMembers(await governingRes.json());
-
-        const executiveRes = await fetch(`${API_URL}/api/executive`);
         setExecutiveMembers(await executiveRes.json());
-
-        const certRes = await fetch(`${API_URL}/api/certifications`);
         setCertifications(await certRes.json());
-
-        const financialRes = await fetch(`${API_URL}/api/financial`);
         setFinancialPDFs(await financialRes.json());
       } catch (err) {
         console.error("Error fetching About Us data:", err);
@@ -59,26 +66,19 @@ export default function AboutUsPage() {
     fetchData();
   }, []);
 
-  /* ================= CERT SLIDER ================= */
-  const [certIndex, setCertIndex] = useState(0);
-  const visible = 3;
-  const total = certifications.length;
-
-  useEffect(() => {
-    if (!total) return;
-    const timer = setInterval(() => {
-      setCertIndex((prev) => (prev + 1 > total - visible ? 0 : prev + 1));
-    }, 3500);
-    return () => clearInterval(timer);
-  }, [total]);
-
   return (
     <div className="text-white">
       <Navbar />
 
       {/* HERO */}
       <section className="relative h-[75vh]">
-        <Image src="/centre-1.jpg" alt="About Us" fill className="object-cover" />
+        <Image
+          src="/centre-1.jpg"
+          alt="About Us"
+          fill
+          className="object-cover"
+          priority
+        />
         <div className="absolute inset-0 bg-black/60" />
         <div className="relative z-10 h-full flex items-center justify-center text-center px-6">
           <div>
@@ -99,9 +99,12 @@ export default function AboutUsPage() {
         </h2>
         <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
           {governingBodyMembers.map((m) => (
-            <div key={m._id} className="bg-[#3f1a7b] p-6 rounded-xl text-center hover:scale-105 transition">
+            <div
+              key={m._id}
+              className="bg-[#3f1a7b] p-6 rounded-xl text-center hover:scale-105 transition"
+            >
               <Image
-                src={`${API_URL}${m.image}`}
+                src={resolveUrl(m.image)}
                 alt={m.name}
                 width={140}
                 height={140}
@@ -122,9 +125,12 @@ export default function AboutUsPage() {
         </h2>
         <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
           {executiveMembers.map((m) => (
-            <div key={m._id} className="bg-[#3f1a7b] p-6 rounded-xl text-center hover:scale-105 transition">
+            <div
+              key={m._id}
+              className="bg-[#3f1a7b] p-6 rounded-xl text-center hover:scale-105 transition"
+            >
               <Image
-                src={`${API_URL}${m.image}`}
+                src={resolveUrl(m.image)}
                 alt={m.name}
                 width={120}
                 height={120}
@@ -145,18 +151,17 @@ export default function AboutUsPage() {
             Our Certifications
           </h2>
 
-          {/* Grid Layout */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {certifications.map((cert) => (
               <a
                 key={cert._id}
-                href={`${API_URL}${cert.pdf}`}
+                href={resolveUrl(cert.pdf)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block"
               >
                 <img
-                  src={`${API_URL}${cert.image}`}
+                  src={resolveUrl(cert.image)}
                   alt={cert.title}
                   className="h-72 w-full object-cover rounded-xl shadow-lg hover:scale-105 transition-transform duration-300"
                 />
@@ -180,13 +185,15 @@ export default function AboutUsPage() {
             {financialPDFs.map((f) => (
               <Link
                 key={f._id}
-                href={`${API_URL}${f.pdf}`}
+                href={resolveUrl(f.pdf)}
                 target="_blank"
                 className="flex items-center justify-between p-5 rounded-xl border hover:shadow-lg transition"
               >
                 <div className="flex items-center gap-3">
                   <FaFilePdf className="text-red-500 text-2xl" />
-                  <span className="font-semibold text-blue-950">{f.title}</span>
+                  <span className="font-semibold text-blue-950">
+                    {f.title}
+                  </span>
                 </div>
               </Link>
             ))}

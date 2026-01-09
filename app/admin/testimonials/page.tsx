@@ -117,18 +117,16 @@ export default function AdminTestimonialsPage() {
                 >
                   {/* IMAGE */}
                   <td className="p-2 sm:p-4">
-  <div className="w-14 h-14 relative rounded-full overflow-hidden">
-    <Image
-      src={item.image ? `${API_URL}${item.image}` : "/user.png"}
-      alt={item.name}
-      fill
-      className="object-cover"
-      unoptimized
-    />
-  </div>
-</td>
-
-
+                    <div className="w-14 h-14 relative rounded-full overflow-hidden">
+                      <Image
+                        src={item.image ? `${API_URL}${item.image}` : "/user.png"}
+                        alt={item.name}
+                        fill
+                        className="object-cover"
+                        unoptimized
+                      />
+                    </div>
+                  </td>
                   {/* NAME */}
                   <td className="p-2 sm:p-4 font-medium text-[#3f1a7b]">
                     {item.name}

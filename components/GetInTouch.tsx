@@ -6,7 +6,7 @@ export default function ContactPage() {
   const [form, setForm] = useState({
     name: "",
     email: "",
-    subject: "",
+    phone: "",
     message: "",
   });
   const [loading, setLoading] = useState(false);
@@ -20,12 +20,10 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
     const API_URL = process.env.NEXT_PUBLIC_API_URL!;
 
-
-
     try {
-      // Send to your existing backend
       const response = await fetch(`${API_URL}/api/contact/contact`, {
         method: "POST",
         headers: {
@@ -34,17 +32,15 @@ export default function ContactPage() {
         body: JSON.stringify({
           name: form.name,
           email: form.email,
-          phone: "Not Provided",
-          message: `${form.subject}\n\n${form.message}`
+          phone: form.phone || "Not Provided",
+          message: form.message,
         }),
       });
 
       const data = await response.json();
 
       if (data.success) {
-        setForm({ name: "", email: "", subject: "", message: "" });
-      } else {
-
+        setForm({ name: "", email: "", phone: "", message: "" });
       }
     } catch (error) {
       console.error("Error:", error);
@@ -64,10 +60,9 @@ export default function ContactPage() {
           </h2>
 
           <p className="mt-4 text-lg text-yellow-300 max-w-2xl mx-auto">
-            Have questions or want to learn more about our programs, events, or publications? Fill out the form below and we’ll get back to you shortly.
+            Have questions or want to learn more? Fill out the form below and we’ll get back to you shortly.
           </p>
 
-          {/* FORM - Now uses your backend */}
           <form
             onSubmit={handleSubmit}
             className="mt-10 bg-white rounded-2xl p-8 shadow-lg max-w-3xl mx-auto text-left"
@@ -82,8 +77,9 @@ export default function ContactPage() {
                   name="name"
                   value={form.name}
                   onChange={handleChange}
+                  placeholder="e.g., John Doe"
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-yellow-400"
                 />
               </div>
 
@@ -96,22 +92,25 @@ export default function ContactPage() {
                   name="email"
                   value={form.email}
                   onChange={handleChange}
+                  placeholder="e.g., john@example.com"
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-yellow-400"
                 />
               </div>
 
+              {/* ✅ Phone Field */}
               <div className="md:col-span-2">
                 <label className="block text-gray-700 font-semibold mb-2">
-                  Subject
+                  Phone
                 </label>
                 <input
                   type="text"
-                  name="subject"
-                  value={form.subject}
+                  name="phone"
+                  value={form.phone}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                  placeholder="e.g., +1 234 567 8901"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-yellow-400"
                 />
               </div>
 
@@ -124,17 +123,17 @@ export default function ContactPage() {
                   value={form.message}
                   onChange={handleChange}
                   rows={5}
+                  placeholder="Your message here..."
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-yellow-400"
                 />
               </div>
             </div>
 
-
             <button
               type="submit"
               disabled={loading}
-              className="mt-6 w-full md:w-auto px-8 py-3 bg-yellow-400 text-[#3f1a7b] font-semibold rounded-full hover:bg-[#3f1a7b] hover:text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="mt-6 w-full md:w-auto px-8 py-3 bg-yellow-400 text-[#3f1a7b] font-semibold rounded-full hover:bg-[#3f1a7b] hover:text-white transition disabled:opacity-50"
             >
               {loading ? "Sending..." : "Send Message"}
             </button>
