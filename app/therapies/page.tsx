@@ -21,7 +21,6 @@ import {
 import { MdSchool, MdWork } from "react-icons/md";
 import { IoIosPeople } from "react-icons/io";
 
-
 interface Section {
   id: number;
   header: string;
@@ -39,15 +38,23 @@ interface Therapy {
   url: string;
 }
 
+/* ✅ EXACT TITLE → ICON MAPPING */
 const therapyIcons: Record<string, React.ReactNode> = {
-  "Speech Therapy": <FaHandHoldingHeart size={40} />,
-  "Behavior Therapy": <FaBrain size={40} />,
-  "Physical Therapy": <FaWalking size={40} />,
-  "Special Education": <MdSchool size={40} />,
-  "Social Skills": <IoIosPeople size={40} />,
-  "Group Therapy": <FaUserFriends size={40} />,
-  "Occupational Therapy": <MdWork size={40} />,
-  "Vocational Training": <FaBriefcase size={40} />,
+  "Speech Language Pathology (SLP)": <FaHandHoldingHeart size={40} />,
+
+  "Activities of Daily Living Skills (ADLS)": <IoIosPeople size={40} />,
+
+  "Physiotherapy (PT)": <FaWalking size={40} />,
+
+  "Applied Behavior Analysis (ABA)": <FaBrain size={40} />,
+
+  "Occupational Therapy (OT)": <MdWork size={40} />,
+
+  "Vocational Training (VT)": <FaBriefcase size={40} />,
+
+  "Group & Structured Activities": <FaUserFriends size={40} />,
+
+  /* Group Activities (if shown separately later) */
   "Computer Skills": <FaLaptop size={40} />,
   "Circle Time": <FaUsers size={40} />,
   "Mart Time": <FaShoppingCart size={40} />,
@@ -82,7 +89,7 @@ export default function TherapiesSection() {
     <main className="bg-white">
       <Navbar />
 
-      {/* HERO SECTION */}
+      {/* HERO */}
       <section className="relative bg-gradient-to-br from-[#3f1a7b] via-[#3f1a7b]/90 to-yellow-400/20 py-32 text-center">
         <div className="max-w-4xl mx-auto px-6">
           <h1 className="text-5xl md:text-6xl font-hand font-extrabold text-white mb-4">
@@ -111,7 +118,7 @@ export default function TherapiesSection() {
               <div className="relative bg-white p-8 flex flex-col items-center justify-center gap-4 rounded-2xl shadow-lg h-72 w-full
                               transition-transform duration-500 group-hover:-translate-y-4 group-hover:shadow-2xl">
                 <div className="bg-[#fbd46d] p-5 rounded-full shadow-md flex items-center justify-center">
-                  {therapyIcons[therapy.mainTitle] || (
+                  {therapyIcons[therapy.mainTitle] ?? (
                     <FaHandHoldingHeart size={40} />
                   )}
                 </div>
