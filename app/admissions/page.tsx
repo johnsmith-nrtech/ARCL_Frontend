@@ -42,14 +42,43 @@ const admissionSteps: AdmissionStep[] = [
     title: "Registration",
     content: [
       <>
-        Online registration is available via our{" "}
-        <Link
-          href="/Admissions/onlineEnrollment"
-          className="text-yellow-400 underline"
-        >
-          registration page
-        </Link>
-        . Alternatively, you can visit the school office for in-person registration.
+        Online registration is available via our. Alternatively, you can visit the school office for in-person registration.
+      </>,
+    ],
+  },
+  {
+    title: "Fee Structure",
+    content: [
+      <>
+        You can register online through our website, or visit the school office to complete the registration in person.
+        <br /><br />
+        <strong>Fee Structure - 2026:</strong>
+        <ul>
+          <li>Admission Charges: Rs. 25,000/- (Non-Refundable, can be paid in installment)</li>
+          <li>Assessment Charges: Rs. 35,000/- (Compulsory at the time of admission)</li>
+          <li>Therapy Fee: Rs. 53,500/- Monthly</li>
+          <li>Progress Report: Rs. 17,000/- (Every 6 months, compulsory)</li>
+          <li>Security Fee: Rs. 20,000/- (Refundable)</li>
+        </ul>
+        <strong>Therapies Provided:</strong>
+        <ul>
+          <li>Applied Behaviour Therapy</li>
+          <li>Speech and Language Therapy</li>
+          <li>Occupational Therapy</li>
+          <li>Sensory Therapy</li>
+          <li>Physiotherapy</li>
+          <li>Play Therapy</li>
+          <li>Sports</li>
+          <li>Activities of Daily Living Skills (ADLS)</li>
+        </ul>
+        <strong>Special Needs Assistant (SNA) Charges:</strong>
+        <ul>
+          <li>3 hours (8AM-11AM): Rs. 25,000/- per month</li>
+          <li>4 hours (8AM-12:30PM): Rs. 30,000/- per month</li>
+          <li>5 hours (8AM-1:30PM): Rs. 35,000/- per month</li>
+          <li>6 hours (8AM-2:30PM): Rs. 40,000/- per month</li>
+        </ul>
+        For more details, you can download the <a href="/path/to/fee-structure.pdf" target="_blank">full PDF</a>.
       </>,
     ],
   },

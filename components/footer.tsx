@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import { CirclePlus } from "lucide-react";
-import { FaTwitter, FaFacebookF, FaYoutube } from "react-icons/fa";
+import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import Link from "next/link";
 import { useState } from "react";
+import { SiTiktok } from "react-icons/si";
+
 
 export default function Footer() {
   const siteNavigationItems = [
@@ -59,9 +61,10 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 pb-8 md:pb-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
 
+
           {/* COLUMN 1 */}
-          <div className="w-full">
-            <div className="flex items-center">
+          <div className="w-full text-center sm:text-left"> {/* text-center for mobile */}
+            <div className="flex flex-col items-center sm:flex-row sm:items-center"> {/* stack vertically on mobile */}
               <Image
                 src="/arcl_logo.jpg"
                 alt="Autism Resource Centre Lahore Logo"
@@ -70,7 +73,7 @@ export default function Footer() {
                 className="rounded-full object-contain"
                 priority
               />
-              <div className="ml-3">
+              <div className="mt-2 sm:mt-0 sm:ml-3"> 
                 <h1 className="text-white text-sm md:text-[18px] font-bold">
                   Autism<span className="text-yellow-400">Resource</span>
                 </h1>
@@ -85,6 +88,7 @@ export default function Footer() {
               for Profit Company under the Societies Registration Act 1860.
             </p>
           </div>
+
 
           {/* COLUMN 2 */}
           <div className="w-full">
@@ -205,11 +209,20 @@ export default function Footer() {
               </a>
             </div>
 
-            <div className="flex items-center gap-4">
-              <FaTwitter />
+          
+          <div className="flex items-center gap-4">
+            <a href="https://www.facebook.com/share/17hvhfjbzy/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer">
               <FaFacebookF />
-              <FaYoutube />
-            </div>
+            </a>
+            <a href="https://www.tiktok.com/@autismresourcecentrelhr?_r=1&_t=ZS-933u7KHbbcb" target="_blank" rel="noopener noreferrer">
+              <SiTiktok />
+            </a>
+            <a href="https://www.instagram.com/autism_resource_center_lahore?igsh=MWFpN3l5NGowdHBieQ%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer">
+              <FaInstagram />
+            </a>
+          </div>
+
+
           </div>
         </div>
       </div>

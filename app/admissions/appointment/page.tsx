@@ -7,10 +7,10 @@ import Footer from "@/components/footer";
 export default function AppointmentPage(): React.JSX.Element {
   const today = new Date();
   const minDate = new Date(today);
-  minDate.setDate(today.getDate() + 1); // no today / past
+  minDate.setDate(today.getDate() + 1); 
 
   const maxDate = new Date(today);
-  maxDate.setMonth(today.getMonth() + 1); // max 1 month ahead
+  maxDate.setMonth(today.getMonth() + 1); 
 
   const formatDate = (date: Date) => date.toISOString().split("T")[0];
 
@@ -69,24 +69,22 @@ export default function AppointmentPage(): React.JSX.Element {
     setSuccess(false);
 
     try {
-      const res = await fetch(`${API_URL}/api/contact/contact`, {
+      const res = await fetch(`${API_URL}/api/appointment/appointment`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: formData.parentName,
+          parentName: formData.parentName,
           email: formData.email,
           phone: formData.phone,
+          childName: formData.childName,
+          childAge: formData.childAge,
+          preferredDate: formData.preferredDate,
+          preferredTime: formData.preferredTime,
+          message: formData.message,
           subject: "Appointment Request",
-          message: `
-            Parent Name: ${formData.parentName}
-            Child Name: ${formData.childName}
-            Child Age: ${formData.childAge}
-            Preferred Date: ${formData.preferredDate}
-            Preferred Time: ${formData.preferredTime}
-            Additional Message: ${formData.message || "N/A"}
-          `,
         }),
       });
+
 
       const data = await res.json();
 
