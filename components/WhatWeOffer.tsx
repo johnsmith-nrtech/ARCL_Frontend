@@ -45,14 +45,28 @@ export default function WhatWeOffer() {
     <section className="w-full bg-[#f4effa] py-20 px-6 md:px-20">
 
       {/* ================= HEADING ================= */}
-      <div className="max-w-6xl mx-auto mb-14 text-center md:text-left">
-        <h4 className="text-lg font-semibold text-[#2a1d7a]">
-          Autism Clinic Programs & Therapies
-        </h4>
-        <h1 className="text-4xl md:text-5xl font-extrabold mt-4 text-[#2a1d7a]">
-          What We Offer
-        </h1>
+      <div className="max-w-6xl mx-auto mb-14 flex flex-col md:flex-row items-center md:items-end justify-between text-center md:text-left">
+        {/* Left Content */}
+        <div>
+          <h4 className="text-lg font-semibold text-[#2a1d7a]">
+            Autism Clinic Programs & Therapies
+          </h4>
+          <h1 className="text-4xl md:text-5xl font-extrabold mt-4 text-[#2a1d7a]">
+            What We Offer
+          </h1>
+        </div>
+
+        {/* Right Button */}
+        <div className="mt-6 md:mt-0">
+          <button
+            onClick={() => window.location.replace("/therapies")}
+            className="px-6 py-3 bg-[#2a1d7a] text-white font-semibold rounded-lg hover:bg-[#1f155c] transition"
+          >
+            View More
+          </button>
+        </div>
       </div>
+
 
       {/* ================= DESKTOP VIEW ================= */}
       <div className="hidden md:grid max-w-6xl mx-auto grid-cols-2 gap-14">
