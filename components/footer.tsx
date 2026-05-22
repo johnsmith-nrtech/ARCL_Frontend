@@ -134,7 +134,7 @@ export default function Footer() {
                   href="mailto:info@arcl.org.pk"
                   className="text-white hover:text-orange-300 transition"
                 >
-                  info@arcl.org.pk
+                  info@arcl.com.pk
                 </a>
               </div>
 

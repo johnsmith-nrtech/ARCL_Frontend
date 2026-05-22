@@ -19,12 +19,6 @@ export default function ContactUs({ id }: { id?: string })  {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   console.log("Form Data:", form);
-  //   alert("Message sent successfully!");
-  //   setForm({ name: "", email: "", phone: "", message: "" });
-  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
